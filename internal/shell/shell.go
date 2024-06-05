@@ -13,9 +13,8 @@ type Shell struct {
 
 func New() *Shell {
 	sh := &Shell{
-		builtins: make(map[string]func(args []string) error),
+		builtins: registerBuiltins(),
 	}
-	sh.registerBuiltins()
 	return sh
 }
 
@@ -49,12 +48,4 @@ func (sh *Shell) executeBuiltin(function func(args []string) error, args []strin
 	if err := function(args); err != nil {
 		fmt.Println("Error:", err)
 	}
-}
-
-func (sh *Shell) registerBuiltins() {
-	sh.builtins["exit"] = exit
-	sh.builtins["echo"] = echo
-	sh.builtins["pwd"] = pwd
-	sh.builtins["cd"] = cd
-	sh.builtins["type"] = cmdType
 }

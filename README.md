@@ -53,7 +53,7 @@ go-shell is a simple command-line shell built with Go that allows developers and
 
 ## ✨ Features
 
-- Built-in commands like `exit`, `echo`, `pwd`, `cd`, and `type`.
+- Built-in commands like `exit`, `echo`, `pwd`, `cd`, `ls`, and `type`.
 - Supports execution of external commands available in the `PATH`.
 - Simple and intuitive interface.
 - Lightweight and fast, leveraging Go's concurrency model.

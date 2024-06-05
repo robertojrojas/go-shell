@@ -18,16 +18,4 @@ func cd(args []string) error {
 	return cmd.Cd(args)
 }
 
-func cmdType(args []string) error {
-	return cmd.Type(args)
-}
-
-func shellBuiltins() map[string]func(args []string) error {
-	return map[string]func(args []string) error{
-		"exit": exit,
-		"echo": echo,
-		"pwd":  pwd,
-		"cd":   cd,
-		"type": cmdType,
-	}
-}
+func ls(args []string) error { return cmd.Ls(args) }
