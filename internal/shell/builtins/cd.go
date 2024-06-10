@@ -1,22 +1,28 @@
-package cmd
+package builtins
 
 import (
 	"fmt"
+	"github.com/sanurb/go-shell/internal/shell/commands"
 	"os"
 )
 
-func Cd(args []string) error {
-	if len(args) == 0 {
+type CdCommand struct {
+	commands.BaseCommand
+	Args []string
+}
+
+func (c *CdCommand) Execute() error {
+	if len(c.Args) == 0 {
 		return fmt.Errorf("cd: missing argument")
 	}
 
-	path, err := expandPath(args[0])
+	path, err := expandPath(c.Args[0])
 	if err != nil {
 		return err
 	}
 
 	if err := os.Chdir(path); err != nil {
-		return printError(args[0], err)
+		return printError(c.Args[0], err)
 	}
 
 	return nil
