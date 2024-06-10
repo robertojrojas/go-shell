@@ -108,7 +108,109 @@ go-shell was inspired by the desire to deeply understand how command-line shells
 ### 💡 Challenges/Learnings
 
 - **Challenges**: Ensuring compatibility with various external commands and handling different edge cases in command execution.
-- **Learnings**: Deepened understanding of Go's `os/exec` package, process management
+- **Learnings**: Deepened understanding of Go's `os/exec` package, process management, application of some design patterns like  factory pattern using go
+
+**Design Decisions for Enhanced Clarity and Extensibility**
+
+The diagram showcases a refined class structure for our interactive shell. Key decisions were made to improve code organization and maintainability:
+
+1.  **`Command` Interface:** This establishes a contract for all commands, ensuring consistent behavior and enabling seamless addition of new commands in the future.
+
+2.  **`BaseCommand` Class:** This provides default implementations for common `Command` methods, reducing boilerplate code in concrete command classes.
+
+3.  **`BuiltinCommand` and `ExternalCommand`:** These abstract classes categorize commands based on their origin (internal to the shell or external system commands), enhancing clarity and separation of concerns.
+
+4.  **`LsCommand` Specialization:** `LsCommand` is further specialized due to its unique handling of options and arguments, showcasing the flexibility of the `Command` pattern to accommodate varying command behaviors.
+
+5.  **`CompositeCommand` for Complex Operations:** This class enables the execution of multiple commands as a single unit, promoting modularity and reusability.
+
+6.  **`CommandFactory` for Instantiation:** This class decouples command creation from the rest of the system, allowing for easy extension and modification of command types.
+
+7.  **`CommandParser` for Interpretation:** This class parses user input and delegates command creation to the `CommandFactory`, promoting a clean separation of responsibilities.
+
+This structure facilitates future enhancements, such as the integration of new command types or the implementation of additional features.
+
+```mermaid
+classDiagram
+    class Command {
+        <<interface>>
+        Execute() error
+        SetStdin(io.Reader)
+        SetStdout(io.Writer)
+        StdinPipe() (io.WriteCloser, error)
+        StdoutPipe() (io.ReadCloser, error)
+    }
+
+    class BaseCommand {
+        Stdin io.Reader
+        Stdout io.Writer
+        SetStdin(io.Reader)
+        SetStdout(io.Writer)
+        StdinPipe() (io.WriteCloser, error)
+        StdoutPipe() (io.ReadCloser, error)
+    }
+
+    class BuiltinCommand {
+        <<abstract>>
+    }
+
+    class LsCommand {
+        Options LsOptions
+        DirPath string
+        SetArgs([]string)
+        listDirectory() error
+        printLongFormat(fs.DirEntry)
+    }
+
+    class OtherBuiltinCommand {
+        <<abstract>>
+    }
+
+    class ExternalCommand {
+        <<abstract>>
+    }
+
+    class CompositeCommand {
+        commands []Command
+        Add(Command)
+        Execute() error
+        SetStdin(io.Reader)
+        SetStdout(io.Writer)
+        StdinPipe() (io.WriteCloser, error)
+        StdoutPipe() (io.ReadCloser, error)
+    }
+
+    class CommandFactory {
+        commands map[string]func([]string, io.Writer) Command
+        Create(string, []string) (Command, error)
+        Register(string, func([]string, io.Writer) Command)
+    }
+
+    class CommandParser {
+        factory CommandFactory
+        Parse(string) (Command, error)
+    }
+
+    class Shell {
+        parser CommandParser
+        Run()
+    }
+
+    Command <|-- BaseCommand
+    BaseCommand <|-- BuiltinCommand
+    BuiltinCommand <|-- LsCommand
+    BuiltinCommand <|-- OtherBuiltinCommand
+    BaseCommand <|-- ExternalCommand
+    Command <|-- CompositeCommand
+    CommandFactory o-- Command
+    CommandParser o-- CommandFactory
+    Shell o-- CommandParser
+
+    note for LsCommand "Handles specific options and arguments"
+    note for OtherBuiltinCommand "Examples: CdCommand, EchoCommand, etc."
+    note for ExternalCommand "Examples: Operating system commands"
+```
+
 
 ### 📑 Useful Resources
 - [Build your own Shell - codecrafters.io](https://app.codecrafters.io/courses/shell/overview)
