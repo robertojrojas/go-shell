@@ -3,19 +3,23 @@ package shell
 import (
 	"bufio"
 	"fmt"
+	"github.com/sanurb/go-shell/internal/shell/parser"
+	"github.com/sanurb/go-shell/internal/shell/registry"
 	"os"
 	"strings"
 )
 
 type Shell struct {
-	builtins map[string]func(args []string) error
+	parser *parser.CommandParser
 }
 
-func New() *Shell {
-	sh := &Shell{
-		builtins: registerBuiltins(),
+func NewShell() *Shell {
+	factory := registry.NewCommandFactory(os.Stdout)
+	registry.RegisterBuiltins(factory)
+	parser := parser.NewCommandParser(factory)
+	return &Shell{
+		parser: parser,
 	}
-	return sh
 }
 
 func (sh *Shell) Run() {
@@ -23,29 +27,20 @@ func (sh *Shell) Run() {
 	for {
 		fmt.Print("$ ")
 		input, _ := reader.ReadString('\n')
-		sh.handleInput(strings.TrimSpace(input))
-	}
-}
+		input = strings.TrimSpace(input)
 
-func (sh *Shell) handleInput(input string) {
-	if len(input) == 0 {
-		return
-	}
-
-	args := strings.Split(input, " ")
-	cmd := args[0]
-
-	if function, found := sh.builtins[cmd]; found {
-		sh.executeBuiltin(function, args[1:])
-	} else {
-		if err := sh.executeExternalCommand(cmd, args[1:]); err != nil {
-			fmt.Println("Error:", err)
+		cmd, err := sh.parser.Parse(input)
+		if err != nil {
+			fmt.Println("Error parsing command:", err)
+			continue
 		}
-	}
-}
 
-func (sh *Shell) executeBuiltin(function func(args []string) error, args []string) {
-	if err := function(args); err != nil {
-		fmt.Println("Error:", err)
+		if cmd == nil {
+			continue
+		}
+
+		if err := cmd.Execute(); err != nil {
+			fmt.Println("Error executing command:", err)
+		}
 	}
 }
