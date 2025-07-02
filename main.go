@@ -1,8 +1,18 @@
 package main
 
-import "github.com/sanurb/go-shell/internal/shell"
+import (
+	"os"
+	"strings"
+
+	"github.com/robertojrojas/go-shell/pkg/shell"
+)
 
 func main() {
-	sh := shell.NewShell()
-	sh.Run()
+	sh := shell.NewShell(os.Stdout)
+	shellScript := `cat /etc/os-release
+	echo "mini shell script works!"
+	exit`
+	cmdReader := strings.NewReader(shellScript)
+	//sh.Run(os.Stdin)
+	sh.Run(cmdReader)
 }

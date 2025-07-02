@@ -1,3 +1,3 @@
-module github.com/sanurb/go-shell
+module github.com/robertojrojas/go-shell
 
-go 1.22
+go 1.24.4

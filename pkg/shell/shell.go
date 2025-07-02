@@ -3,18 +3,19 @@ package shell
 import (
 	"bufio"
 	"fmt"
-	"github.com/sanurb/go-shell/internal/shell/parser"
-	"github.com/sanurb/go-shell/internal/shell/registry"
-	"os"
+	"io"
 	"strings"
+
+	"github.com/robertojrojas/go-shell/pkg/shell/parser"
+	"github.com/robertojrojas/go-shell/pkg/shell/registry"
 )
 
 type Shell struct {
 	parser *parser.CommandParser
 }
 
-func NewShell() *Shell {
-	factory := registry.NewCommandFactory(os.Stdout)
+func NewShell(out io.Writer) *Shell {
+	factory := registry.NewCommandFactory(out)
 	registry.RegisterBuiltins(factory)
 	parser := parser.NewCommandParser(factory)
 	return &Shell{
@@ -22,8 +23,8 @@ func NewShell() *Shell {
 	}
 }
 
-func (sh *Shell) Run() {
-	reader := bufio.NewReader(os.Stdin)
+func (sh *Shell) Run(in io.Reader) {
+	reader := bufio.NewReader(in)
 	for {
 		fmt.Print("$ ")
 		input, _ := reader.ReadString('\n')

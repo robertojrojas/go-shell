@@ -2,9 +2,10 @@ package registry
 
 import (
 	"fmt"
-	"github.com/sanurb/go-shell/internal/shell/builtins"
-	"github.com/sanurb/go-shell/internal/shell/commands"
 	"io"
+
+	"github.com/robertojrojas/go-shell/pkg/shell/builtins"
+	"github.com/robertojrojas/go-shell/pkg/shell/commands"
 )
 
 type CommandFactory struct {
@@ -36,6 +37,9 @@ func RegisterBuiltins(factory *CommandFactory) {
 	})
 	factory.Register("echo", func(args []string, stdout io.Writer) commands.Command {
 		return &builtins.EchoCommand{BaseCommand: commands.BaseCommand{Stdout: stdout}, Args: args}
+	})
+	factory.Register("cat", func(args []string, stdout io.Writer) commands.Command {
+		return &builtins.CatCommand{BaseCommand: commands.BaseCommand{Stdout: stdout}, Args: args}
 	})
 	factory.Register("pwd", func(args []string, stdout io.Writer) commands.Command {
 		return &builtins.PwdCommand{BaseCommand: commands.BaseCommand{Stdout: stdout}}

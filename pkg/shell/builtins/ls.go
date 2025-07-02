@@ -2,11 +2,12 @@ package builtins
 
 import (
 	"fmt"
-	"github.com/sanurb/go-shell/internal/shell/commands"
 	"io/fs"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/robertojrojas/go-shell/pkg/shell/commands"
 )
 
 type LsCommand struct {

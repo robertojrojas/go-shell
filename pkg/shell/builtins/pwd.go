@@ -2,8 +2,9 @@ package builtins
 
 import (
 	"fmt"
-	"github.com/sanurb/go-shell/internal/shell/commands"
 	"os"
+
+	"github.com/robertojrojas/go-shell/pkg/shell/commands"
 )
 
 type PwdCommand struct {

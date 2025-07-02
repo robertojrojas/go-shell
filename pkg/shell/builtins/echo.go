@@ -2,8 +2,9 @@ package builtins
 
 import (
 	"fmt"
-	"github.com/sanurb/go-shell/internal/shell/commands"
 	"strings"
+
+	"github.com/robertojrojas/go-shell/pkg/shell/commands"
 )
 
 type EchoCommand struct {
