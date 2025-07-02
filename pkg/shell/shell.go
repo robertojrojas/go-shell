@@ -50,9 +50,5 @@ func (sh *Shell) Run(in io.Reader, prompt bool) {
 			}
 			fmt.Println("Error executing command:", err)
 		}
-
-		if _, ok := cmd.(*builtins.NoopCommand); ok {
-			return
-		}
 	}
 }

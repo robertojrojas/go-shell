@@ -10,5 +10,5 @@ type NoopCommand struct {
 }
 
 func (c *NoopCommand) Execute() error {
-	return c.Stdout.Close()
+	return &SilentExitError{}
 }

@@ -12,12 +12,6 @@ type CatCommand struct {
 	Args []string
 }
 
-type SilentExitError struct{}
-
-func (e *SilentExitError) Error() string {
-	return ""
-}
-
 func (c *CatCommand) Execute() error {
 	decider := c.Args[0]
 	fname := c.Args[0]

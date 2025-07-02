@@ -11,6 +11,12 @@ type ExitCommand struct {
 	Args []string
 }
 
+type SilentExitError struct{}
+
+func (e *SilentExitError) Error() string {
+	return ""
+}
+
 func (c *ExitCommand) Execute() error {
 	os.Exit(0)
 	return nil
