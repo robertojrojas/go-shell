@@ -5,21 +5,21 @@ import "io"
 type Command interface {
 	Execute() error
 	SetStdin(io.Reader)
-	SetStdout(io.Writer)
+	SetStdout(io.WriteCloser)
 	StdinPipe() (io.WriteCloser, error)
 	StdoutPipe() (io.ReadCloser, error)
 }
 
 type BaseCommand struct {
 	Stdin  io.Reader
-	Stdout io.Writer
+	Stdout io.WriteCloser
 }
 
 func (c *BaseCommand) SetStdin(input io.Reader) {
 	c.Stdin = input
 }
 
-func (c *BaseCommand) SetStdout(output io.Writer) {
+func (c *BaseCommand) SetStdout(output io.WriteCloser) {
 	c.Stdout = output
 }
 

@@ -27,7 +27,7 @@ func (c *CompositeCommand) SetStdin(r io.Reader) {
 	}
 }
 
-func (c *CompositeCommand) SetStdout(w io.Writer) {
+func (c *CompositeCommand) SetStdout(w io.WriteCloser) {
 	for _, cmd := range c.commands {
 		cmd.SetStdout(w)
 	}

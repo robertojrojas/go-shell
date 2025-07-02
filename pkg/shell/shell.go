@@ -15,7 +15,7 @@ type Shell struct {
 	parser *parser.CommandParser
 }
 
-func NewShell(out io.Writer) *Shell {
+func NewShell(out io.WriteCloser) *Shell {
 	factory := registry.NewCommandFactory(out)
 	registry.RegisterBuiltins(factory)
 	parser := parser.NewCommandParser(factory)
@@ -44,12 +44,12 @@ func (sh *Shell) Run(in io.Reader, prompt bool) {
 			continue
 		}
 
-		if _, ok := cmd.(*builtins.NoopCommand); ok {
-			return
-		}
-
 		if err := cmd.Execute(); err != nil {
 			fmt.Println("Error executing command:", err)
+		}
+
+		if _, ok := cmd.(*builtins.NoopCommand); ok {
+			return
 		}
 	}
 }

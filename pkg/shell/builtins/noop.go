@@ -10,5 +10,5 @@ type NoopCommand struct {
 }
 
 func (c *NoopCommand) Execute() error {
-	return nil
+	return c.Stdout.Close()
 }
