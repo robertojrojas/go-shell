@@ -56,4 +56,7 @@ func RegisterBuiltins(factory *CommandFactory) {
 	factory.Register("type", func(args []string, stdout io.Writer) commands.Command {
 		return &builtins.TypeCommand{BaseCommand: commands.BaseCommand{Stdout: stdout}, Args: args}
 	})
+	factory.Register("noop", func(args []string, stdout io.Writer) commands.Command {
+		return &builtins.NoopCommand{BaseCommand: commands.BaseCommand{Stdout: stdout}, Args: args}
+	})
 }

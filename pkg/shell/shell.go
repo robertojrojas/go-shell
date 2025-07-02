@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/robertojrojas/go-shell/pkg/shell/builtins"
 	"github.com/robertojrojas/go-shell/pkg/shell/parser"
 	"github.com/robertojrojas/go-shell/pkg/shell/registry"
 )
@@ -23,10 +24,13 @@ func NewShell(out io.Writer) *Shell {
 	}
 }
 
-func (sh *Shell) Run(in io.Reader) {
+func (sh *Shell) Run(in io.Reader, prompt bool) {
 	reader := bufio.NewReader(in)
 	for {
-		fmt.Print("$ ")
+		if prompt {
+			fmt.Print("$ ")
+		}
+
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 
@@ -38,6 +42,10 @@ func (sh *Shell) Run(in io.Reader) {
 
 		if cmd == nil {
 			continue
+		}
+
+		if _, ok := cmd.(*builtins.NoopCommand); ok {
+			return
 		}
 
 		if err := cmd.Execute(); err != nil {
