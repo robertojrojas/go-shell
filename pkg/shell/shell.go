@@ -45,6 +45,9 @@ func (sh *Shell) Run(in io.Reader, prompt bool) {
 		}
 
 		if err := cmd.Execute(); err != nil {
+			if _, ok := err.(*builtins.SilentExitError); ok {
+				return
+			}
 			fmt.Println("Error executing command:", err)
 		}
 
